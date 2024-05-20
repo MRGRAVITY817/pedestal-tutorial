@@ -11,20 +11,22 @@
   (route/expand-routes
    #{["/greet" :get respond-hello :route-name :greet]}))
 
-(defn create-server []
+(defn create-server [config]
   (http/create-server
    {::http/routes routes
     ::http/type   :jetty
-    ::http/port   8080}))
+    ::http/join?  false
+    ::http/port   (-> config :server :port)}))
 
-(defn start-server []
-  (http/start (create-server)))
-
-(start-server)
+(defn start-server [config]
+  (http/start (create-server config)))
 
 (defn -main
   "I don't do a whole lot ... yet."
   []
   (let [config (config/read-config)]
     (println "Starting RealWorld with config:" config)
-    (start-server)))
+    (start-server config)))
+
+(comment
+  (-main))
